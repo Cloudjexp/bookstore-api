@@ -1,35 +1,16 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
+
+	"library-api/internal/router"
 )
 
-type HealthResponse struct {
-	Status string `json:"status"`
-}
-
-func healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	response := HealthResponse{
-		Status: "ok",
-	}
-
-	err := json.NewEncoder(w).Encode(response)
-	if err != nil {
-		http.Error(w, "error al generar la respuesta", http.StatusInternalServerError)
-		return
-	}
-}
-
 func main() {
-	mux := http.NewServeMux()
+	mux := router.NewRouter()
 
-	mux.HandleFunc("/health", healthHandler)
-
-	server := http.Server{
+	server := &http.Server{
 		Addr:    ":8080",
 		Handler: mux,
 	}
